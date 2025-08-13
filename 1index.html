@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تطبيق تفاعلي: إطار استراتيجي لتنمية قدرات الذكاء الاصطناعي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Brilliant Blues -->
+    <!-- Application Structure Plan: The SPA is designed as an interactive dashboard for exploring the comprehensive AI training framework. The information architecture is task-oriented. It starts with a high-level strategic overview linking the program to UAE's national vision. The core of the application is an interactive grid of the 8 target entities. Clicking an entity card dynamically loads a detailed view for that specific entity, preventing information overload. This detail view uses a tabbed interface to present the 3 proposed courses, allowing users to drill down into curriculum details and expected outcomes. This structure transforms the linear report into a user-driven exploratory tool, ideal for decision-makers from different government bodies. -->
+    <!-- Visualization & Content Choices: 
+        - National Vision Alignment: Goal: Inform/Organize. Viz: A list of the 8 strategic objectives (HTML/CSS). Justification: Clearly links the training program to national goals. NO SVG.
+        - Entity Selection Grid: Goal: Navigate/Explore. Viz: Interactive Cards with Unicode icons (HTML/CSS/JS). Justification: Provides an intuitive, visual entry point for users to find relevant information quickly. NO SVG.
+        - Training Hours Overview: Goal: Compare. Viz: Chart.js Bar Chart. Justification: Offers a quick quantitative comparison of the training investment across all entities. Label wrapping and tooltip config are implemented. NO SVG.
+        - Course Details: Goal: Inform/Organize. Viz: Interactive Tabs (HTML/CSS/JS). Justification: The most efficient way to present detailed, parallel information for the 3 courses within each entity without creating a long, unreadable page. NO SVG.
+        - Training Axes/Outcomes: Goal: Inform. Viz: Styled Lists (HTML/CSS). Justification: Clearly presents the curriculum and benefits for each course. NO SVG. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 400px;
+            max-height: 450px;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+        }
+        .entity-card {
+            cursor: pointer;
+        }
+        .entity-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .entity-card.active {
+            border: 2px solid #1d4ed8;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -2px rgb(0 0 0 / 0.1);
+        }
+        .course-tab {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 4px solid transparent;
+        }
+        .course-tab.active {
+            border-bottom-color: #1d4ed8;
+            color: #1e3a8a;
+        }
+        .section-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .section-subtitle {
+            font-size: 1.125rem;
+            color: #4b5563;
+            max-width: 800px;
+            margin: 0 auto 3rem auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="text-gray-900">
+
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <h1 class="text-3xl md:text-4xl font-extrabold text-blue-900">الإطار الاستراتيجي لتنمية قدرات الذكاء الاصطناعي</h1>
+            <p class="text-lg text-gray-600 mt-2">خطة عمل شاملة لدعم رؤية الإمارات 2031</p>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-8 mt-8">
+
+        <section class="mb-16">
+            <h2 class="section-title">التوافق مع الرؤية الوطنية</h2>
+            <p class="section-subtitle">هذا البرنامج مصمم ليكون أداة تنفيذية تساهم بشكل مباشر في تحقيق الأهداف الاستراتيجية الثمانية لرؤية الإمارات الوطنية للذكاء الاصطناعي.</p>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <div class="bg-blue-50 p-4 rounded-lg"><p class="font-semibold text-blue-800">ترسيخ مكانة الدولة</p></div>
+                <div class="bg-blue-50 p-4 rounded-lg"><p class="font-semibold text-blue-800">زيادة الميزة التنافسية</p></div>
+                <div class="bg-blue-50 p-4 rounded-lg"><p class="font-semibold text-blue-800">تطوير منظومة خصبة</p></div>
+                <div class="bg-blue-50 p-4 rounded-lg"><p class="font-semibold text-blue-800">اعتماد AI في الخدمات</p></div>
+                <div class="bg-blue-50 p-4 rounded-lg"><p class="font-semibold text-blue-800">استقطاب وتدريب المواهب</p></div>
+                <div class="bg-blue-50 p-4 rounded-lg"><p class="font-semibold text-blue-800">جلب قدرات بحثية</p></div>
+                <div class="bg-blue-50 p-4 rounded-lg"><p class="font-semibold text-blue-800">توفير البيانات والبنية التحتية</p></div>
+                <div class="bg-blue-50 p-4 rounded-lg"><p class="font-semibold text-blue-800">ضمان الحوكمة القوية</p></div>
+            </div>
+        </section>
+
+        <section class="mb-16">
+            <h2 class="section-title">لوحة قيادة الجهات المستهدفة</h2>
+            <p class="section-subtitle">اختر جهة من القائمة أدناه لاستعراض المسار التدريبي المخصص لها، بما في ذلك السياق الاستراتيجي، الدورات المقترحة، والمخرجات المتوقعة.</p>
+            <div id="entity-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-6">
+            </div>
+        </section>
+
+        <section id="details-section" class="mb-16 hidden">
+            <div class="card">
+                <div id="details-content">
+                </div>
+            </div>
+        </section>
+        
+        <section class="mb-16">
+             <div class="card">
+                <h2 class="section-title">نظرة عامة على الاستثمار التدريبي</h2>
+                <p class="section-subtitle">يمثل الرسم البياني التالي إجمالي الساعات التدريبية الموصى بها لكل جهة، مما يعكس حجم الاستثمار في رأس المال البشري لتحقيق التحول المنشود.</p>
+                <div class="chart-container">
+                    <canvas id="trainingHoursChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="mt-12 py-8 bg-blue-900 text-white">
+        <div class="container mx-auto px-6 text-center">
+            <p>نحو بناء اقتصاد قائم على الذكاء الاصطناعي، تحقيقًا لأهداف مئوية الإمارات 2071.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const trainingData = {
+                customs: { name: "الجمارك", icon: "🚢", totalHours: 66, courses: [
+                    { title: "إدارة المخاطر المعززة بالذكاء الاصطناعي وأمن الحدود الذكي", duration: 24, axes: ["أسس AI في إدارة المخاطر", "ورشة عمل في الرؤية الحاسوبية للفحص غير التدخلي", "التحليلات التنبؤية لتحديد المخاطر", "IoT والبلوك تشين لسلامة سلسلة الإمداد", "دراسات حالة عملية"], outcomes: "زيادة معدلات الكشف، تسريع التخليص الجمركي، التحول لنموذج أمني استباقي." },
+                    { title: "أتمتة الامتثال التجاري والتحليل الذكي للمستندات", duration: 24, axes: ["مقدمة في المعالجة الذكية للمستندات (IDP)", "مختبر استخلاص البيانات من الفواتير وبوالص الشحن", "ورشة عمل في التصنيف التلقائي لرموز النظام المنسق", "AI للتحقق من الامتثال التجاري", "تكامل أنظمة IDP مع الأنظمة الجمركية"], outcomes: "تقليل إدخال البيانات اليدوي، خفض أخطاء التصنيف، تحسين الامتثال." },
+                    { title: "التحليلات المتقدمة لتسهيل التجارة وتحسين سلسلة الإمداد", duration: 18, axes: ["الدور الاستراتيجي للتحليلات", "تحليل تدفقات التجارة والتنبؤ بالاتجاهات", "بناء لوحات معلومات تفاعلية لتحديد الاختناقات", "محاكاة تأثير السياسات الجمركية", "تطوير استراتيجية جمركية قائمة على البيانات"], outcomes: "قرارات سياسات مدعومة بالبيانات، تخصيص أمثل للموارد، تعزيز القدرة التنافسية." }
+                ]},
+                courts: { name: "المحاكم", icon: "⚖️", totalHours: 66, courses: [
+                    { title: "الذكاء الاصطناعي للبحث القانوني والتحليلات التنبؤية للقضايا", duration: 24, axes: ["الحقوقي المعزز بالذكاء الاصطناعي", "البحث القانوني المتقدم باستخدام NLP", "AI التوليدي للتلخيص والصياغة القانونية", "مقدمة في العدالة التنبؤية", "تطبيق عملي: صياغة حكم في قضية افتراضية"], outcomes: "بحث قانوني أسرع وأشمل، زيادة الكفاءة، دعم اتخاذ القرارات القضائية." },
+                    { title: "الأتمتة الذكية للمستندات والاكتشاف الإلكتروني", duration: 24, axes: ["إدارة طوفان البيانات في الدعاوى", "الاكتشاف الإلكتروني المدعوم بـ AI (TAR)", "التحليل الآلي للعقود والأدلة", "تبسيط الإدارة القضائية وأتمتة الإجراءات", "ورشة عمل: إدارة مشروع اكتشاف إلكتروني"], outcomes: "عمليات اكتشاف أكثر كفاءة، تقليل تراكم القضايا، تحسين الوصول إلى العدالة." },
+                    { title: "الحوكمة الأخلاقية للذكاء الاصطناعي والشفافية الخوارزمية", duration: 18, axes: ["الحفاظ على سيادة القانون في عصر AI", "معالجة التحيز الخوارزمي", "مبدأ القابلية للتفسير (XAI)", "الإجراءات القانونية الواجبة و AI", "ورشة عمل في تطوير أطر الحوكمة"], outcomes: "هيئة قضائية مجهزة للتقييم النقدي، الحفاظ على ثقة الجمهور، ريادة الحوار العالمي." }
+                ]},
+                police: { name: "الشرطة", icon: "🚓", totalHours: 72, courses: [
+                    { title: "التحليل التنبؤي لمكافحة الجريمة", duration: 24, axes: ["من الشرطة التفاعلية إلى التنبؤية", "نماذج الشرطة التنبؤية", "ورشة عمل في تحليل بيانات الجريمة", "التحديات الأخلاقية ومخاطر التحيز", "التخطيط الاستراتيجي للموارد"], outcomes: "تحسين منع الجرائم، تخصيص أمثل للموارد، صنع سياسات أمنية قائمة على الأدلة." },
+                    { title: "AI في التحقيقات الجنائية والتعرف البيومتري", duration: 24, axes: ["الأدوات الذكية للمحقق الحديث", "تقنية التعرف على الوجوه: الإمكانيات والضوابط", "معالجة التحيز والدقة في أنظمة التعرف", "تحليل الفيديو والصوت المعزز بـ AI", "NLP في تحليل التقارير"], outcomes: "تسريع التحقيقات، زيادة القدرة على معالجة الأدلة الرقمية، تحسين دقة تحديد الهوية." },
+                    { title: "التحليل الجنائي الرقمي المتقدم ومواجهة التهديدات السيبرانية", duration: 24, axes: ["فهم التهديدات السيبرانية الناشئة", "AI في كشف الاحتيال المالي", "تحليل البرمجيات الخبيثة بـ ML", "مواجهة التزييف العميق (Deepfakes)", "أتمتة الاستجابة للحوادث"], outcomes: "تعزيز قدرات التحليل الجنائي، تطوير مهارات متقدمة، تحسين سرعة الاستجابة." }
+                ]},
+                statistics: { name: "الإحصاء والتنمية المجتمعية", icon: "📊", totalHours: 72, courses: [
+                    { title: "AI التوليدي في إنتاج الإحصاءات الرسمية", duration: 24, axes: ["مستقبل الإحصاءات الرسمية", "هندسة الأوامر (Prompt Engineering) للإحصائيين", "أتمتة دورة حياة البيانات الإحصائية", "استخلاص البيانات من المصادر غير المهيكلة", "الحوكمة والأمن في استخدام LLMs"], outcomes: "تقليل الأعباء الإدارية، فتح مصادر بيانات جديدة، تسريع إنتاج التقارير." },
+                    { title: "النماذج التنبؤية للاتجاهات السكانية", duration: 24, axes: ["مقدمة في النمذجة التنبؤية", "أنواع النماذج (تصنيف، تجميع، سلاسل زمنية)", "ورشة عمل: بناء نموذج تنبؤي بسيط", "أهمية جودة البيانات ودمج المصادر", "تفسير وتطبيق النتائج للتخطيط"], outcomes: "توقع الاحتياجات المستقبلية، تخصيص الموارد بشكل استباقي، دعم السياسات التنموية." },
+                    { title: "تحليل المشاعر والرأي العام", duration: 24, axes: ["فهم صوت المجتمع", "تقنيات تحليل المشاعر", "ورشة عمل في تحليل بيانات وسائل التواصل", "تحليل المشاعر القائم على الجانب", "من التحليل إلى السياسات"], outcomes: "الحصول على تغذية راجعة فورية، فهم أعمق لاحتياجات السكان، سياسات أكثر استجابة." }
+                ]},
+                aviation: { name: "الطيران المدني", icon: "✈️", totalHours: 72, courses: [
+                    { title: "AI في إدارة الحركة الجوية وتحسين الكفاءة", duration: 24, axes: ["مستقبل التحكم الجوي (ATM)", "التحليلات التنبؤية لتدفق الحركة", "محاكاة المجال الجوي الرقمي (Digital Twin)", "تحسين المسارات وتسلسل الإقلاع والهبوط", "دور العنصر البشري في الأنظمة الذكية"], outcomes: "زيادة سعة المجال الجوي، تقليل التأخير، تحسين كفاءة الوقود، تعزيز السلامة." },
+                    { title: "الصيانة التنبؤية للطائرات لتعزيز السلامة", duration: 24, axes: ["من الصيانة التفاعلية إلى التنبؤية", "آليات عمل الصيانة التنبؤية", "ورشة عمل في تشخيص الأعطال", "دراسات حالة من رواد الصناعة", "تحديات التنفيذ والجودة"], outcomes: "تقليل الأعطال غير المجدولة، زيادة موثوقية الطائرات، خفض تكاليف الصيانة." },
+                    { title: "تحسين تجربة المسافرين في المطارات", duration: 24, axes: ["المطار الذكي: إعادة تصور الرحلة", "إدارة تدفق الركاب بالرؤية الحاسوبية", "رحلة سلسة مع القياسات الحيوية", "المساعدون الافتراضيون (Chatbots)", "أمن المطار المعزز بـ AI"], outcomes: "تقليل أوقات الانتظار، تجربة سفر أكثر سلاسة، زيادة الكفاءة التشغيلية." }
+                ]},
+                judicial: { name: "المعهد القضائي", icon: "🏛️", totalHours: 54, courses: [
+                    { title: "تصميم المناهج القضائية المعززة بـ AI", duration: 18, axes: ["تقييم المناهج الحالية", "دمج مفاهيم AI في القانون", "تصميم دراسات حالة واقعية", "ورشة عمل لتطوير وحدة جديدة"], outcomes: "تطوير مناهج حديثة، تخريج قضاة يفهمون تحديات AI، تعزيز مكانة المعهد." },
+                    { title: "AI في أساليب التدريس القضائي", duration: 18, axes: ["تحسين التجربة التعليمية بالتكنولوجيا", "منصات التعلم التكيفية", "المحاكاة والواقع الافتراضي", "التحليلات التعليمية لتقييم الأداء"], outcomes: "تجربة تعليمية فعالة، تحسين جودة التدريب، ابتكار أساليب تدريس رائدة." },
+                    { title: "قيادة الحوار العالمي حول AI والقانون", duration: 18, axes: ["دور القضاء في تشكيل مستقبل AI", "تحليل الأطر التنظيمية العالمية", "صياغة الأوراق البحثية والسياسات", "المهارات القيادية والتواصل"], outcomes: "تمكين قيادات قضائية لتمثيل الإمارات دوليًا، المساهمة في تشكيل المعايير العالمية." }
+                ]},
+                university: { name: "طلاب الجامعات", icon: "🎓", totalHours: 72, courses: [
+                    { title: "AI في البحث الأكاديمي المتقدم", duration: 24, axes: ["الباحث المعزز بالذكاء الاصطناعي", "تدريب عملي على Gemini وNotebookLM", "التحليل الإحصائي بمساعدة AI", "توليد التصورات البيانية", "الكتابة الأكاديمية والتحقق من الانتحال"], outcomes: "تمكين الطلاب من إجراء أبحاث أعمق، تطوير التفكير النقدي، تحسين جودة المشاريع." },
+                    { title: "أسس تطوير الذكاء الاصطناعي", duration: 24, axes: ["فهم المبادئ الأساسية لـ AI", "مقدمة عملية في Machine Learning", "أساسيات NLP", "مدخل إلى Computer Vision", "مشروع تطبيقي مصغر"], outcomes: "تزويد الطلاب بفهم عملي، تشجيع الابتكار، تنمية مهارات حل المشكلات." },
+                    { title: "أخلاقيات AI وتأثيره المجتمعي", duration: 24, axes: ["الأبعاد الأخلاقية والاجتماعية لـ AI", "التحيز والعدالة في الخوارزميات", "الشفافية والمساءلة", "الخصوصية والمراقبة", "حوار مفتوح حول مستقبل العمل"], outcomes: "تخريج جيل من المهنيين الواعين، تعزيز ثقافة الابتكار المسؤول." }
+                ]},
+                journalists: { name: "الصحفيون", icon: "📰", totalHours: 54, courses: [
+                    { title: "AI في صحافة البيانات الاستقصائية", duration: 18, axes: ["العثور على الأخبار المخفية في البيانات", "تحليل مجموعات البيانات الضخمة", "استخبارات المصادر المفتوحة (OSINT)", "ورشة عمل: صياغة قصة استقصائية"], outcomes: "تمكين الصحفيين من إجراء تحقيقات أعمق، زيادة القدرة على المساءلة." },
+                    { title: "التحقق من الحقائق وكشف التزييف العميق", duration: 18, axes: ["فهم تهديد المعلومات المضللة", "تدريب عملي على أدوات الكشف", "تحليل ما وراء الصورة (Forensics)", "NLP للتحقق من الادعاءات", "محاكاة غرفة الأخبار"], outcomes: "فضح المعلومات المضللة، حماية الجمهور، تعزيز مصداقية الإعلام." },
+                    { title: "التغطية الأخلاقية والمسؤولة لتقنيات AI", duration: 18, axes: ["تغطية AI بشكل موضوعي", "شرح المفاهيم المعقدة للجمهور", "التركيز على التأثير البشري", "الأخلاقيات في صحافة AI"], outcomes: "رفع جودة التغطية الإعلامية، تزويد الجمهور بمعلومات دقيقة ومتوازنة." }
+                ]}
+            };
+
+            const entityGrid = document.getElementById('entity-grid');
+            const detailsSection = document.getElementById('details-section');
+            const detailsContent = document.getElementById('details-content');
+
+            const processLabel = (label, maxLength = 16) => {
+                if (typeof label !== 'string' || label.length <= maxLength) return label;
+                const words = label.split(' ');
+                let lines = [];
+                let currentLine = '';
+                words.forEach(word => {
+                    if ((currentLine + ' ' + word).trim().length > maxLength) {
+                        lines.push(currentLine.trim());
+                        currentLine = word;
+                    } else {
+                        currentLine = (currentLine + ' ' + word).trim();
+                    }
+                });
+                if (currentLine) lines.push(currentLine.trim());
+                return lines;
+            };
+            
+            const tooltipTitleCallback = (tooltipItems) => {
+                const item = tooltipItems[0];
+                let label = item.chart.data.labels[item.dataIndex];
+                return Array.isArray(label) ? label.join(' ') : label;
+            };
+
+            const commonChartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: { title: tooltipTitleCallback },
+                        bodyFont: { family: 'Tajawal', size: 12 },
+                        titleFont: { family: 'Tajawal', size: 14 },
+                        boxPadding: 6,
+                        rtl: true,
+                    }
+                },
+                scales: {
+                    x: { ticks: { font: { family: 'Tajawal', size: 10 } } },
+                    y: { ticks: { font: { family: 'Tajawal' } }, beginAtZero: true }
+                }
+            };
+
+            for (const key in trainingData) {
+                const entity = trainingData[key];
+                const card = document.createElement('div');
+                card.className = 'entity-card card text-center';
+                card.dataset.key = key;
+                card.innerHTML = `
+                    <div class="text-5xl mb-4">${entity.icon}</div>
+                    <h3 class="text-lg font-bold text-blue-900">${entity.name}</h3>
+                    <p class="text-sm text-gray-500 mt-1">${entity.totalHours} ساعة تدريبية</p>
+                `;
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.entity-card').forEach(c => c.classList.remove('active'));
+                    card.classList.add('active');
+                    displayEntityDetails(key);
+                    detailsSection.classList.remove('hidden');
+                    detailsSection.scrollIntoView({ behavior: 'smooth' });
+                });
+                entityGrid.appendChild(card);
+            }
+
+            function displayEntityDetails(key) {
+                const entity = trainingData[key];
+                let coursesHtml = '';
+                entity.courses.forEach((course, index) => {
+                    coursesHtml += `<button data-course-index="${index}" class="course-tab text-gray-600 font-semibold py-3 px-4 ${index === 0 ? 'active' : ''}">${processLabel(course.title)}</button>`;
+                });
+
+                detailsContent.innerHTML = `
+                    <div class="flex items-center mb-6 border-b pb-4">
+                        <span class="text-6xl ml-4">${entity.icon}</span>
+                        <div>
+                            <p class="text-sm text-gray-500">المسار التدريبي لـ</p>
+                            <h2 class="text-3xl font-bold text-blue-900">${entity.name}</h2>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap border-b border-gray-200" id="course-tabs">
+                        ${coursesHtml}
+                    </div>
+                    <div id="course-details" class="mt-6"></div>
+                `;
+
+                const courseTabs = detailsContent.querySelectorAll('.course-tab');
+                courseTabs.forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        courseTabs.forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        displayCourseDetails(key, tab.dataset.courseIndex);
+                    });
+                });
+                
+                displayCourseDetails(key, 0);
+            }
+
+            function displayCourseDetails(entityKey, courseIndex) {
+                const course = trainingData[entityKey].courses[courseIndex];
+                const courseDetailsContainer = document.getElementById('course-details');
+                
+                let axesHtml = course.axes.map(axis => `<li class="flex items-start"><span class="text-blue-500 font-bold mr-2 ml-2">&#8227;</span><span>${axis}</span></li>`).join('');
+
+                courseDetailsContainer.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="md:col-span-2">
+                            <h3 class="text-xl font-bold text-gray-800 mb-2">${course.title}</h3>
+                            <h4 class="font-bold text-gray-700 mt-4 mb-3">المحاور التدريبية:</h4>
+                            <ul class="space-y-2 text-gray-600">${axesHtml}</ul>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <h4 class="text-xl font-bold text-gray-800 mb-3">المخرجات والفوائد:</h4>
+                            <p class="text-gray-700 font-semibold mb-4">المدة: ${course.duration} ساعة (${course.duration / 6} أيام)</p>
+                            <p class="text-gray-600">${course.outcomes}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const chartLabels = Object.values(trainingData).map(e => processLabel(e.name));
+            const chartData = Object.values(trainingData).map(e => e.totalHours);
+            new Chart(document.getElementById('trainingHoursChart'), {
+                type: 'bar',
+                data: {
+                    labels: chartLabels,
+                    datasets: [{
+                        label: 'إجمالي الساعات التدريبية',
+                        data: chartData,
+                        backgroundColor: '#3b82f6',
+                        borderColor: '#1e40af',
+                        borderWidth: 1,
+                        borderRadius: 5
+                    }]
+                },
+                options: commonChartOptions
+            });
+
+        });
+    </script>
+</body>
+</html>
